@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickShare</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <div>
+        <p class="eyebrow">LOCAL FILE TRANSFER</p>
+        <h1>Quick<span>Share</span></h1>
+        <p class="subtitle">Move files between your phone and PC over Wi-Fi.</p>
+      </div>
+      <div class="status"><span></span> Connected</div>
+    </header>
+
+    <section class="upload-card">
+      <div class="upload-icon">↑</div>
+      <h2>Send files to this PC</h2>
+      <p>Select images, videos, documents, or any other files.</p>
+      <input id="fileInput" type="file" multiple />
+      <label for="fileInput" class="choose-btn">Choose files</label>
+      <p id="uploadStatus" class="status-text"></p>
+    </section>
+
+    <section class="files-section">
+      <div class="section-heading">
+        <h2>Available files</h2>
+        <button id="refreshBtn" class="small-btn">Refresh</button>
+      </div>
+      <div id="fileList" class="file-list">
+        <p class="muted">Loading files...</p>
+      </div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
