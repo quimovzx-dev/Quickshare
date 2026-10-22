@@ -33,3 +33,7 @@ If Windows Firewall asks for permission, allow Python on your private network.
 - Uploaded files are stored in the `uploads` folder.
 - This is intended for use on a trusted local network.
 - Do not expose this server directly to the public internet.
+
+## Security setup
+
+Set QUICKSHARE_PASSWORD to a strong unique password in your local environment before starting. QUICKSHARE_USER defaults to quim. The browser will ask for these credentials. All API routes require authentication. There is a 100 MiB per-file streaming upload limit. Use only on a trusted local network; Basic authentication needs HTTPS if the network is untrusted. Do not expose this development server directly to the public internet. No password is committed to this repo. Existing files remain unchanged.
