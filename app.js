@@ -14,6 +14,7 @@ async function loadFiles() {
   fileList.innerHTML = '<p class="muted">Loading files...</p>';
   try {
     const response = await fetch("/api/files");
+    if (!response.ok) throw new Error("Sign in to view files");
     const files = await response.json();
 
     if (!files.length) {
@@ -21,18 +22,21 @@ async function loadFiles() {
       return;
     }
 
-    fileList.innerHTML = files.map(file => `
-      <div class="file-item">
-        <div>
-          <div class="file-name">${escapeHtml(file.name)}</div>
-          <div class="file-meta">${formatBytes(file.size)} · ${new Date(file.modified).toLocaleString()}</div>
-        </div>
-        <div class="actions">
-          <a class="action" href="/api/download/${encodeURIComponent(file.name)}">Download</a>
-          <button class="action delete" onclick="deleteFile('${encodeURIComponent(file.name)}')">Delete</button>
-        </div>
-      </div>
-    `).join("");
+    fileList.replaceChildren();
+    for (const file of files) {
+      const row = document.createElement("div"); row.className = "file-item";
+      const info = document.createElement("div");
+      const name = document.createElement("div"); name.className = "file-name"; name.textContent = file.name;
+      const meta = document.createElement("div"); meta.className = "file-meta";
+      meta.textContent = `${formatBytes(file.size)} · ${new Date(file.modified).toLocaleString()}`;
+      info.append(name, meta);
+      const actions = document.createElement("div"); actions.className = "actions";
+      const download = document.createElement("a"); download.className = "action";
+      download.href = `/api/download/${encodeURIComponent(file.name)}`; download.textContent = "Download";
+      const remove = document.createElement("button"); remove.className = "action delete";
+      remove.textContent = "Delete"; remove.addEventListener("click", () => deleteFile(encodeURIComponent(file.name)));
+      actions.append(download, remove); row.append(info, actions); fileList.append(row);
+    }
   } catch (error) {
     fileList.innerHTML = '<p class="muted">Could not load files.</p>';
   }
@@ -70,7 +74,8 @@ fileInput.addEventListener("change", async () => {
 
 async function deleteFile(encodedName) {
   if (!confirm("Delete this file?")) return;
-  await fetch(`/api/files/${encodedName}`, { method: "DELETE" });
+  const response = await fetch(`/api/files/${encodedName}`, { method: "DELETE" });
+  if (!response.ok) { alert("Delete failed. Please sign in and retry."); return; }
   await loadFiles();
 }
 
